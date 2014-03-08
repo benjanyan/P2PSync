@@ -67,38 +67,4 @@ public class ControlClient extends Client {
 		close();
 
 	}
-	
-	protected void command_echo(String text) {
-		Utils.logD("Me->Server: " + text);
-		try {
-			output.write((text + "\n").getBytes());
-		} catch (IOException ioe) {
-			System.err.print("Server->echo: Failed to write text to output - " + ioe.getMessage());
-			System.exit(1);
-		}
-	}
-	
-	private void command_key() {
-		command_echo("key:" + key);
-	}
-	
-	
-	public void sendDirectoryInfo(FileInfo fileInfo) {
-		OutputStream directoryInfoOutput = null;
-		String command = readLine();
-		directoryInfoOutput = output;
-		
-		if (command.equals("request:FileInfo")) {
-			Utils.logD("Sending DirectoryInfo Object to client...");
-			try {
-				ObjectOutputStream objectOut = new ObjectOutputStream(directoryInfoOutput);
-				objectOut.writeObject(fileInfo);
-				objectOut.flush();
-			} catch (IOException e) {
-				Utils.logE("Failed to create ObjectOutput\n" + e.getMessage());
-				e.printStackTrace();
-			}
-			command_echo("request:done");
-		}
-	}
 }

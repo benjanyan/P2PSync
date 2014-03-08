@@ -105,63 +105,6 @@ public class ControlServer extends Server {
 		close();		
 	}
 	
-	protected void command_echo(String text) {
-		Utils.logD("Me->Client: " + text);
-		try {
-			output.write((text + "\n").getBytes());
-		} catch (IOException ioe) {
-			Utils.logE("Server->echo: Failed to write text to output" + ioe.getMessage());
-			System.exit(1);
-		}
-	}
-	
-	public void sendDirectoryInfo(FileInfo fileInfo) {
-		OutputStream directoryInfoOutput = null;
-		String command = readLine();
-		directoryInfoOutput = output;
-		
-		if (command.equals("request:FileInfo")) {
-			Utils.logD("Sending DirectoryInfo Object to client...");
-			try {
-				ObjectOutputStream objectOut = new ObjectOutputStream(directoryInfoOutput);
-				objectOut.writeObject(fileInfo);
-				objectOut.flush();
-			} catch (IOException e) {
-				Utils.logE("Failed to create ObjectOutput\n" + e.getMessage());
-				e.printStackTrace();
-			}
-			command_echo("request:done");
-		}
-	}
-	
-	private FileInfo getRemoteFileInfo() {
-		FileInfo fileInfo = null;
-		InputStream fileInfoInput = null;
-		
-		Utils.logD("Client: Preparing to receive directory details back from the server...");
-		
-		try {
-			command_echo("request:FileInfo");
-			fileInfoInput = input;
-			ObjectInputStream objectIn = new ObjectInputStream(fileInfoInput);
-			fileInfo = (FileInfo) objectIn.readObject();
-		} catch (IOException e) {
-			Utils.logE("Failed to create ObjectInput\n" + e.getMessage());
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			Utils.logE("Failed to recieve ObjectInput\n" + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			String command = readLine();
-			if (command.equals("request:done")) {
-				return fileInfo;
-			} else {
-				Utils.logE("Server: Unexpected response from client: " + command);
-			}
-		}
-		return null;
-	}
-	
 	public void receiveFile(FileInfo fileInfo) {
 		fileServer.getFile(fileInfo);
 		if (readLine().matches("request:done")) {
@@ -169,9 +112,5 @@ public class ControlServer extends Server {
 		} else {
 			Utils.logD("Client replied with something weird...");
 		}
-	}
-	
-	protected void command_request(String thing) {
-		command_echo("request:" + thing);
 	}
 }
