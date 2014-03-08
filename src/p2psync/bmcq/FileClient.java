@@ -56,6 +56,7 @@ public class FileClient extends Client {
 
 		} catch (IOException ioe) {
 			Utils.logE("FileClient->sendFile(): " + ioe.getMessage());
+			System.exit(1);
 		}
 	}
 	

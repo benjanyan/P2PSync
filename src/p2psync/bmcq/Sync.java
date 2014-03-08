@@ -26,13 +26,13 @@ public class Sync {
 				Utils.logD("Deleted " + rootDirectory + item.getPath());
 			} else if (item.isIgnored()) {
 				//Nothing
+			} else if(item.isDirectory()) {
+				(new File(rootDirectory + item.getPath() + item.getName())).mkdir();
+				executeSync(item);
 			} else if (item.isModified()) {
 				if (!item.getName().matches(".*.bmh")) {
 					control.receiveFile(item);
 				}
-			} else if(item.isDirectory()) {
-				(new File(rootDirectory + item.getPath() + item.getName())).mkdir();
-				executeSync(item);
 			}
 		}
 	}

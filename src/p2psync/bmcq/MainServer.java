@@ -18,7 +18,7 @@ public class MainServer {
 		server.setKey("jd874jks893ka");
 		server.run();
 		
-		rootFileInfo = null;
+		//rootFileInfo = null;
 		InetAddress host = server.getClientAddress();
 		server = null;
 		
