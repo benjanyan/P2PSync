@@ -189,7 +189,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 			ArrayList<FileInfo> deletedFileInfo = new ArrayList<FileInfo>();
 			
 			for (FileInfo pfi : previous.getChildren()) {								//Compare all previous children to now
-				matchedFileInfo = current.get(pfi.getPath());
+				matchedFileInfo = current.get(pfi.getPathAsString());
 				if (!pfi.isDirectory()) {
 					if (matchedFileInfo != null) {
 						matchedFileInfo.setAnalysed(true);
@@ -326,7 +326,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		HashMap<String,FileInfo> children = getChildrenAsHashMap();
 		for (FileInfo ofi : otherFileInfos.getChildren()) {
 			if (!ofi.isModified()) {
-				matchedFileInfo = children.get(ofi.getPath());
+				matchedFileInfo = children.get(ofi.getPathAsString());
 				if (matchedFileInfo != null && !matchedFileInfo.isDirectory() && matchedFileInfo.detectConflict(ofi)) {
 					matchedFileInfo.setConflicted(true);
 					Utils.logD(matchedFileInfo.getName() + " and " + ofi.getName() + " have both changed since the last sync!!!!");
