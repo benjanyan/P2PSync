@@ -21,11 +21,7 @@ public class Sync {
 	private void executeSync(FileInfo currentDir) {
 		for (FileInfo item : currentDir.getChildren()) {
 			if (item.isDeleted()) {
-				if ((new File(rootDirectory.resolve(item.getPath().toPath()).toString())).delete()) {
-					Utils.logD("Deleted " + rootDirectory.resolve(item.getPath().toPath()));
-				} else {
-					Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath().toPath()).toString()));
-				}
+				delete(item);
 			} else if (item.isIgnored()) {
 				//Nothing
 			} else if(item.isDirectory()) {
@@ -35,6 +31,33 @@ public class Sync {
 				if (!item.getName().matches(".*.bmh")) {
 					control.receiveFile(item);
 				}
+			}
+		}
+	}
+	
+	private void delete(FileInfo item) {
+		File file = new File(rootDirectory.resolve(item.getPath().toPath()).toString());
+		if (item.isDirectory()) {
+			recursiveDelete(file.listFiles());
+		}
+		if (file.delete()) {
+			Utils.logD("Deleted " + rootDirectory.resolve(item.getPath().toPath()));
+		} else {
+			Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath().toPath()).toString()));
+		}
+	}
+	
+	private void recursiveDelete(File[] files) {
+		for (File file : files) {
+			if (file.isDirectory()) {
+				recursiveDelete(file.listFiles());
+			} else {
+				if (file.delete()) {
+					Utils.logE("Failed to delete " + file.getPath());
+				} else {
+					Utils.logD("Deleted: " + file.getPath());
+				}
+				
 			}
 		}
 	}
