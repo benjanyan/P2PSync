@@ -339,7 +339,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		if (isModified() && otherFileInfo.isModified()) {
 			return true;
 		}
-		if (isModified() && isDeleted()) {
+		if (isModified() && otherFileInfo.isDeleted()) {
 			return true;
 		}
 		

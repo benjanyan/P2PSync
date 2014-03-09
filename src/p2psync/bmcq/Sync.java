@@ -24,9 +24,10 @@ public class Sync {
 				delete(item);
 			} else if (item.isIgnored()) {
 				//Nothing
-			} else if(item.isDirectory()) {
+			} else if(item.isDirectory() && item.isModified()) {
 				(new File(rootDirectory.resolve(item.getPath().toPath()).toString())).mkdir();
 				executeSync(item);
+				Utils.logD("Created folder..");
 			} else if (item.isModified()) {
 				if (!item.getName().matches(".*.bmh")) {
 					control.receiveFile(item);
@@ -37,7 +38,7 @@ public class Sync {
 	
 	private void delete(FileInfo item) {
 		File file = new File(rootDirectory.resolve(item.getPath().toPath()).toString());
-		if (item.isDirectory()) {
+		if (item.isDirectory() && file.listFiles() != null) {
 			recursiveDelete(file.listFiles());
 		}
 		if (file.delete()) {

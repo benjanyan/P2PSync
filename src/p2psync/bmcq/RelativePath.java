@@ -18,7 +18,7 @@ public class RelativePath implements Serializable {
 			path.add(member);
 		}
 		
-		Utils.logD("Created RelativePath from Array: " + toString());
+		//Utils.logD("Created RelativePath from Array: " + toString());
 	}
 	
 	RelativePath(Path path) {
@@ -32,7 +32,7 @@ public class RelativePath implements Serializable {
 			this.path.add(member.toString());
 		}
 		
-		Utils.logD("Created RelativePath from Path: " + toString() + " (memberCount: " + memberCount + ")");
+		//Utils.logD("Created RelativePath from Path: " + toString() + " (memberCount: " + memberCount + ")");
 	}
 	
 	RelativePath() {
