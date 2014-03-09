@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,7 +18,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = -8865725152813983428L;
 	private String name;		//File's name
-	private String path;		//The path relative to the root directory
+	private Path path;		//The path relative to the root directory
 	private Long modifiedDate;
 	private Long length;		//Size in bytes
 	private String id;
@@ -28,7 +30,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	private boolean directory;	//True if directory rather than a file
 	
 	private long objectTimeStamp;	//When object was generated
-	private String localRootPath;
+	private Path localRootPath;
 	
 	FileInfo(File file, FileInfo parent) {
 		super();
@@ -39,7 +41,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		constructFromFile();
 	}
 	
-	FileInfo(String name, String path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
+	FileInfo(String name, Path path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
 		super();
 		this.name = name;
 		this.path = path;
@@ -47,20 +49,20 @@ public class FileInfo extends SyncInfo implements Serializable {
 		this.length = length;
 		this.parent = parent;
 		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
-		this.id = modifiedDate.toString() + name.length() + path.length() + length.toString();
+		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
 		children = null;
 		directory = false;
 		completeHashMap = null;
 	}
 	
-	FileInfo(String name, String path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
+	FileInfo(String name, Path path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
 		super();
 		this.name = name;
 		this.path = path;
 		this.modifiedDate = modifiedDate;
 		this.length = (long) 0;	//NA
 		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
-		this.id = modifiedDate.toString() + name.length() + path.length() + length.toString();
+		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
 		children = new FileInfo[childrenLength];
 		directory = true;
 	}
@@ -68,7 +70,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	public void constructFromFile() {
 		name = file.getName();
 		if (parent == null) {
-			localRootPath = file.getPath();
+			localRootPath = file.toPath();
 		} else {
 			localRootPath = parent.getLocalRootPath();
 		}
@@ -86,7 +88,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		} else {
 			this.length = file.length();
 		}
-		this.id = modifiedDate.toString() + name.length() + path.length() + length.toString();
+		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
 	}
 	
 	
@@ -244,13 +246,17 @@ public class FileInfo extends SyncInfo implements Serializable {
 		}
 	}
 	
-	private String getPathRelativeToRoot() {
+	private Path getPathRelativeToRoot() {
+		Path fullPath;
+		Path rootPath;
+		Path relativePath;
 		if (parent != null && parent.getParent() != null) {
-			String rootFullPath = getRoot().getLocalRootPath();
-			String thisFullPath = file.getPath();
-			return thisFullPath.substring(rootFullPath.length());
+			rootPath = getRoot().getLocalRootPath();
+			fullPath = file.toPath();
+			relativePath = fullPath.relativize(rootPath);
+			return relativePath;
 		} else {
-			return name;
+			return Paths.get("");
 		}
 	}
 	
@@ -344,7 +350,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		HashMap<String, FileInfo> childrenHM = new HashMap<String, FileInfo>();
 		
 		for (FileInfo child : children) {
-			childrenHM.put(child.getPath(), child);
+			childrenHM.put(child.getPathAsString(), child);
 		}
 		
 		return childrenHM;
@@ -396,8 +402,12 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return name;
 	}
 	
-	public String getPath() {
+	public Path getPath() {
 		return path;
+	}
+	
+	public String getPathAsString() {
+		return path.toString();
 	}
 	
 	public long getModifiedDate() {
@@ -416,7 +426,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return file;
 	}
 	
-	public String getLocalRootPath() {
+	public Path getLocalRootPath() {
 		return localRootPath;
 	}
 	
@@ -478,7 +488,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return transferFiles;
 	}
 	
-	public void setLocalRootPath(String localRootPath) {
+	public void setLocalRootPath(Path localRootPath) {
 		this.localRootPath = localRootPath;
 	}
 }

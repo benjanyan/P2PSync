@@ -4,25 +4,26 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 public class FileServer extends Server {
 	
 	private FileOutputStream fileOutput;
 	protected InputStream fileInput;
 	private ControlServer controlServer;
-	protected String rootDirectory;
-	private String subDirectory;
+	protected Path rootDirectory;
+	private Path subDirectory;
 	
 
-	FileServer(int port, ControlServer controlServer, String rootDirectory) {
+	FileServer(int port, ControlServer controlServer, Path rootDirectory) {
 		super(port);
 		this.controlServer = controlServer;
 		this.rootDirectory = rootDirectory;
 		this.description = "File server";
-		this.subDirectory = "";
+		this.subDirectory = null;
 	}
 
-	public void setSubDirectory(String subDirectory) {
+	public void setSubDirectory(Path subDirectory) {
 		this.subDirectory = subDirectory;
 	}
 	

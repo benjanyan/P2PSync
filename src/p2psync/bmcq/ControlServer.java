@@ -6,16 +6,17 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class ControlServer extends Server {
 	private FileServer fileServer;
-	private String rootDirectory;
+	private Path rootDirectory;
 	private FileInfo rootFileInfo;
 	
-	ControlServer(int port, String rootDirectory, FileInfo rootFileInfo) {
+	ControlServer(int port, Path rootDirectory, FileInfo rootFileInfo) {
 		super(port);
 		this.description = "Control Server";
 		this.rootDirectory = rootDirectory;

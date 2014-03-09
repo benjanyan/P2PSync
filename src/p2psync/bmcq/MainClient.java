@@ -3,6 +3,8 @@ package p2psync.bmcq;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MainClient {
 
@@ -10,10 +12,10 @@ public class MainClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String localSyncDirectory = "G:/Test";	//Without trailing slash
+		Path localSyncDirectory = Paths.get("G:/Test");	//Without trailing slash
 		String hostName = "kyouko.portsmouth";
 		InetAddress host = null;
-		FileInfo rootFileInfo = new FileInfo(new File(localSyncDirectory),null);
+		FileInfo rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);
 		
 		rootFileInfo.setFlags();
 		rootFileInfo.refreshHashMap();
@@ -36,7 +38,7 @@ public class MainClient {
 		server.run();
 		server = null;
 		
-		rootFileInfo = new FileInfo(new File(localSyncDirectory),null);
+		rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);
 		rootFileInfo.export();
 	}
 }

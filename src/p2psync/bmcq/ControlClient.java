@@ -7,14 +7,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.nio.file.Path;
 
 public class ControlClient extends Client {
 	
 	protected FileClient fileClient;
-	private String rootDirectory;
+	private Path rootDirectory;
 	private FileInfo rootFileInfo;
 	
-	ControlClient(InetAddress host, int port, String rootDirectory, FileInfo rootFileInfo) {
+	ControlClient(InetAddress host, int port, Path rootDirectory, FileInfo rootFileInfo) {
 		super(host,port);
 		fileClient = new FileClient(host,port + 1,this);
 		this.rootDirectory = rootDirectory;

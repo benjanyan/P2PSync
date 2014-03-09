@@ -1,14 +1,14 @@
 package p2psync.bmcq;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
 
 public class Sync {
 	private FileInfo syncInfo;
-	private String rootDirectory;
+	private Path rootDirectory;
 	private ControlServer control;
 	
-	Sync(FileInfo syncInfo, String rootDirectory, ControlServer control) {
+	Sync(FileInfo syncInfo, Path rootDirectory, ControlServer control) {
 		this.syncInfo = syncInfo;
 		this.rootDirectory = rootDirectory;
 		this.control = control;
@@ -21,13 +21,15 @@ public class Sync {
 	private void executeSync(FileInfo currentDir) {
 		for (FileInfo item : currentDir.getChildren()) {
 			if (item.isDeleted()) {
-				item.deassociatedFile();
-				item.getAssociatedFile(rootDirectory).delete();
-				Utils.logD("Deleted " + rootDirectory + item.getPath());
+				if ((new File(rootDirectory.resolve(item.getPath()).toString())).delete()) {
+					Utils.logD("Deleted " + rootDirectory.resolve(item.getPath()));
+				} else {
+					Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath()).toString()));
+				}
 			} else if (item.isIgnored()) {
 				//Nothing
 			} else if(item.isDirectory()) {
-				(new File(rootDirectory + item.getPath() + item.getName())).mkdir();
+				(new File(rootDirectory.resolve(item.getPath()).toString())).mkdir();
 				executeSync(item);
 			} else if (item.isModified()) {
 				if (!item.getName().matches(".*.bmh")) {
