@@ -21,15 +21,15 @@ public class Sync {
 	private void executeSync(FileInfo currentDir) {
 		for (FileInfo item : currentDir.getChildren()) {
 			if (item.isDeleted()) {
-				if ((new File(rootDirectory.resolve(item.getPath()).toString())).delete()) {
-					Utils.logD("Deleted " + rootDirectory.resolve(item.getPath()));
+				if ((new File(rootDirectory.resolve(item.getPath().toPath()).toString())).delete()) {
+					Utils.logD("Deleted " + rootDirectory.resolve(item.getPath().toPath()));
 				} else {
-					Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath()).toString()));
+					Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath().toPath()).toString()));
 				}
 			} else if (item.isIgnored()) {
 				//Nothing
 			} else if(item.isDirectory()) {
-				(new File(rootDirectory.resolve(item.getPath()).toString())).mkdir();
+				(new File(rootDirectory.resolve(item.getPath().toPath()).toString())).mkdir();
 				executeSync(item);
 			} else if (item.isModified()) {
 				if (!item.getName().matches(".*.bmh")) {

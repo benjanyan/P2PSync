@@ -6,7 +6,7 @@ public class MainTest extends Thread{
 
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		File testFolder = new File("/home/yuki_n/demo");
+		File testFolder = new File("G:/test");
 		FileInfo fileInfo = new FileInfo(testFolder, null);
 		fileInfo.setFlags();
 		fileInfo.refreshHashMap();

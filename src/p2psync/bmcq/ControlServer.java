@@ -80,7 +80,7 @@ public class ControlServer extends Server {
 				remoteFileInfo = getRemoteFileInfo();
 				Sync sync = new Sync(remoteFileInfo, rootDirectory, this);
 				
-				remoteFileInfo.setLocalRootPath(rootDirectory);				
+				remoteFileInfo.setLocalRootPath(rootDirectory.toString());				
 				rootFileInfo.detectConflicts(remoteFileInfo);
 				
 				remoteFileInfo.printContents();

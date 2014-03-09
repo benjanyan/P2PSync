@@ -18,7 +18,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = -8865725152813983428L;
 	private String name;		//File's name
-	private Path path;		//The path relative to the root directory
+	private RelativePath path;		//The path relative to the root directory
 	private Long modifiedDate;
 	private Long length;		//Size in bytes
 	private String id;
@@ -30,7 +30,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	private boolean directory;	//True if directory rather than a file
 	
 	private long objectTimeStamp;	//When object was generated
-	private Path localRootPath;
+	private String localRootPath;
 	
 	FileInfo(File file, FileInfo parent) {
 		super();
@@ -44,7 +44,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	FileInfo(String name, Path path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
 		super();
 		this.name = name;
-		this.path = path;
+		this.path = new RelativePath(path);
 		this.modifiedDate = modifiedDate;
 		this.length = length;
 		this.parent = parent;
@@ -58,7 +58,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	FileInfo(String name, Path path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
 		super();
 		this.name = name;
-		this.path = path;
+		this.path = new RelativePath(path);
 		this.modifiedDate = modifiedDate;
 		this.length = (long) 0;	//NA
 		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
@@ -70,7 +70,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	public void constructFromFile() {
 		name = file.getName();
 		if (parent == null) {
-			localRootPath = file.toPath();
+			localRootPath = file.getPath();
 		} else {
 			localRootPath = parent.getLocalRootPath();
 		}
@@ -246,17 +246,18 @@ public class FileInfo extends SyncInfo implements Serializable {
 		}
 	}
 	
-	private Path getPathRelativeToRoot() {
-		Path fullPath;
-		Path rootPath;
-		Path relativePath;
+	private RelativePath getPathRelativeToRoot() {
 		if (parent != null && parent.getParent() != null) {
-			rootPath = getRoot().getLocalRootPath();
-			fullPath = file.toPath();
-			relativePath = fullPath.relativize(rootPath);
-			return relativePath;
+			Path fullPath = file.toPath();
+			Path rootPath = Paths.get(getRoot().getLocalRootPath());
+			Path relativePath = rootPath.relativize(fullPath);
+			return new RelativePath(relativePath);
 		} else {
-			return Paths.get("");
+			if (parent == null) {
+				return new RelativePath();
+			} else {
+				return new RelativePath(name);
+			}
 		}
 	}
 	
@@ -402,7 +403,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return name;
 	}
 	
-	public Path getPath() {
+	public RelativePath getPath() {
 		return path;
 	}
 	
@@ -426,7 +427,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return file;
 	}
 	
-	public Path getLocalRootPath() {
+	public String getLocalRootPath() {
 		return localRootPath;
 	}
 	
@@ -488,7 +489,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return transferFiles;
 	}
 	
-	public void setLocalRootPath(Path localRootPath) {
+	public void setLocalRootPath(String localRootPath) {
 		this.localRootPath = localRootPath;
 	}
 }
