@@ -11,7 +11,7 @@ public class MainServer {
 	public static void main(String[] args)  {
 		
 		
-			Path localSyncDirectory = Paths.get("G:/test");	//Without trailing slash
+			RelativePath localSyncDirectory = new RelativePath("G:/", "test");	//Without trailing slash
 			
 			
 			FileInfo rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);

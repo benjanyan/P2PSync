@@ -5,10 +5,10 @@ import java.nio.file.Path;
 
 public class Sync {
 	private FileInfo syncInfo;
-	private Path rootDirectory;
+	private RelativePath rootDirectory;
 	private ControlServer control;
 	
-	Sync(FileInfo syncInfo, Path rootDirectory, ControlServer control) {
+	Sync(FileInfo syncInfo, RelativePath rootDirectory, ControlServer control) {
 		this.syncInfo = syncInfo;
 		this.rootDirectory = rootDirectory;
 		this.control = control;
@@ -25,7 +25,7 @@ public class Sync {
 			} else if (item.isIgnored()) {
 				//Nothing
 			} else if(item.isDirectory() && item.isModified()) {
-				(new File(rootDirectory.resolve(item.getPath().toPath()).toString())).mkdir();
+				(new File(rootDirectory.toString() + File.separator + item.getPathAsString())).mkdir();
 				executeSync(item);
 				Utils.logD("Created folder..");
 			} else if (item.isModified()) {
@@ -37,14 +37,14 @@ public class Sync {
 	}
 	
 	private void delete(FileInfo item) {
-		File file = new File(rootDirectory.resolve(item.getPath().toPath()).toString());
+		File file = new File(rootDirectory.toString() + File.separator + item.getPathAsString());
 		if (item.isDirectory() && file.listFiles() != null) {
 			recursiveDelete(file.listFiles());
 		}
 		if (file.delete()) {
-			Utils.logD("Deleted " + rootDirectory.resolve(item.getPath().toPath()));
+			Utils.logD("Deleted " + (rootDirectory.toString() + File.separator + item.getPathAsString()));
 		} else {
-			Utils.logE("Failed to delete " + (rootDirectory.resolve(item.getPath().toPath()).toString()));
+			Utils.logE("Failed to delete " + (rootDirectory.toString() + File.separator + item.getPathAsString()));
 		}
 	}
 	

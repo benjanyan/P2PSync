@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 public class ControlServer extends Server {
 	private FileServer fileServer;
-	private Path rootDirectory;
+	private RelativePath rootDirectory;
 	private FileInfo rootFileInfo;
 	
-	ControlServer(int port, Path rootDirectory, FileInfo rootFileInfo) {
+	ControlServer(int port, RelativePath rootDirectory, FileInfo rootFileInfo) {
 		super(port);
 		this.description = "Control Server";
 		this.rootDirectory = rootDirectory;

@@ -11,11 +11,11 @@ public class FileServer extends Server {
 	private FileOutputStream fileOutput;
 	protected InputStream fileInput;
 	private ControlServer controlServer;
-	protected Path rootDirectory;
-	private Path subDirectory;
+	protected RelativePath rootDirectory;
+	private RelativePath subDirectory;
 	
 
-	FileServer(int port, ControlServer controlServer, Path rootDirectory) {
+	FileServer(int port, ControlServer controlServer, RelativePath rootDirectory) {
 		super(port);
 		this.controlServer = controlServer;
 		this.rootDirectory = rootDirectory;
@@ -23,7 +23,7 @@ public class FileServer extends Server {
 		this.subDirectory = null;
 	}
 
-	public void setSubDirectory(Path subDirectory) {
+	public void setSubDirectory(RelativePath subDirectory) {
 		this.subDirectory = subDirectory;
 	}
 	

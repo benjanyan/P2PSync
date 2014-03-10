@@ -41,10 +41,10 @@ public class FileInfo extends SyncInfo implements Serializable {
 		constructFromFile();
 	}
 	
-	FileInfo(String name, Path path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
+	FileInfo(String name, RelativePath path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
 		super();
 		this.name = name;
-		this.path = new RelativePath(path);
+		this.path = path;
 		this.modifiedDate = modifiedDate;
 		this.length = length;
 		this.parent = parent;
@@ -55,10 +55,10 @@ public class FileInfo extends SyncInfo implements Serializable {
 		completeHashMap = null;
 	}
 	
-	FileInfo(String name, Path path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
+	FileInfo(String name, RelativePath path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
 		super();
 		this.name = name;
-		this.path = new RelativePath(path);
+		this.path = path;
 		this.modifiedDate = modifiedDate;
 		this.length = (long) 0;	//NA
 		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
@@ -248,10 +248,9 @@ public class FileInfo extends SyncInfo implements Serializable {
 	
 	private RelativePath getPathRelativeToRoot() {
 		if (parent != null && parent.getParent() != null) {
-			Path fullPath = file.toPath();
-			Path rootPath = Paths.get(getRoot().getLocalRootPath());
-			Path relativePath = rootPath.relativize(fullPath);
-			return new RelativePath(relativePath);
+			RelativePath fullPath = new RelativePath(file.getPath());
+			RelativePath rootPath = new RelativePath(getRoot().getLocalRootPath());
+			return fullPath.getPathRelativeTo(rootPath);
 		} else {
 			if (parent == null) {
 				return new RelativePath();
@@ -294,7 +293,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 				if (child.isDirectory()) {
 					System.out.print(indent + "+" + child.getName());
 				} else {
-					System.out.print(indent + child.getName());
+					System.out.print(indent + child.getPathAsString());
 				}
 				if (child.isModified()) {
 					System.out.print(" (Modified/New) ");

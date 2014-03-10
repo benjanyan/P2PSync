@@ -2,18 +2,30 @@ package p2psync.bmcq;
 
 import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class RelativePath implements Serializable {
 	private ArrayList<String> path = new ArrayList<String>();
-	private int memberCount;
+	
+	RelativePath(String pathAsString) {
+		this.path = new ArrayList<String>();
+		String separator;
+		
+		if (File.separator.equals("\\")) {
+			separator = "\\\\";
+		} else {
+			separator = File.separator;
+		}
+		
+		String[] newPath = pathAsString.split(separator);
+		
+		for (String member : newPath) {
+			this.path.add(member);
+		}
+	}
 	
 	RelativePath(String... members) {
-		memberCount = members.length;
-		
 		for(String member : members) {
 			path.add(member);
 		}
@@ -21,27 +33,33 @@ public class RelativePath implements Serializable {
 		//Utils.logD("Created RelativePath from Array: " + toString());
 	}
 	
-	RelativePath(Path path) {
-		this.path = new ArrayList<String>();
-		memberCount = path.getNameCount();
-		Iterator<Path> pathIterator = path.iterator();
-		Path member = null;
-		
-		while (pathIterator.hasNext()) {
-			member = pathIterator.next();
-			this.path.add(member.toString());
-		}
-		
-		//Utils.logD("Created RelativePath from Path: " + toString() + " (memberCount: " + memberCount + ")");
-	}
+//	RelativePath(Path path) {
+//		this.path = new ArrayList<String>();
+//		Iterator<Path> pathIterator = path.iterator();
+//		Path member = null;
+//		
+//		while (pathIterator.hasNext()) {
+//			member = pathIterator.next();
+//			this.path.add(member.toString());
+//		}
+//		
+//		//Utils.logD("Created RelativePath from Path: " + toString() + " (memberCount: " + memberCount + ")");
+//	}
 	
 	RelativePath() {
-		memberCount = 0;
 		path = new ArrayList<String>();
 	}
 	
+	RelativePath(ArrayList<String> newPath) {
+		path = newPath;
+	}
+	
+	public String getMember(int index) {
+		return path.get(index);
+	}
+	
 	public int getNameCount() {
-		return memberCount;
+		return this.path.size();
 	}
 	
 	public String toString() {
@@ -58,7 +76,24 @@ public class RelativePath implements Serializable {
 		return pathString;
 	}
 	
-	public Path toPath() {
-		return Paths.get(toString());
-	}	
+//	public Path toPath() {
+//		return Paths.get(toString());
+//	}
+	
+	public RelativePath getPathRelativeTo(RelativePath otherPath) {
+		ArrayList<String> newPath = new ArrayList<String>();
+		int i = 0;
+		
+		while (i < this.getNameCount() && i < otherPath.getNameCount()) {
+			if (!this.getMember(i).equals(otherPath.getMember(i))) {
+				newPath.add(otherPath.getMember(i));
+			}
+			++i;
+		}
+		while (i < this.getNameCount()) {
+			newPath.add(this.getMember(i));
+			++i;
+		}		
+		return new RelativePath(newPath);		
+	}
 }
