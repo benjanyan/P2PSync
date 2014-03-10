@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 
 public class FileServer extends Server {
 	
@@ -12,7 +11,6 @@ public class FileServer extends Server {
 	protected InputStream fileInput;
 	private ControlServer controlServer;
 	protected RelativePath rootDirectory;
-	private RelativePath subDirectory;
 	
 
 	FileServer(int port, ControlServer controlServer, RelativePath rootDirectory) {
@@ -20,11 +18,6 @@ public class FileServer extends Server {
 		this.controlServer = controlServer;
 		this.rootDirectory = rootDirectory;
 		this.description = "File server";
-		this.subDirectory = null;
-	}
-
-	public void setSubDirectory(RelativePath subDirectory) {
-		this.subDirectory = subDirectory;
 	}
 	
 	protected void getFile(FileInfo fileInfo) {
@@ -46,8 +39,6 @@ public class FileServer extends Server {
 				System.exit(1);
 			}
 		}
-		
-
 				
 		try {
 			localFile = new File(rootDirectory + File.separator + fileInfo.getPath());

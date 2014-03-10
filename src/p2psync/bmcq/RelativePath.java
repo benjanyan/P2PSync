@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class RelativePath implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3968651610332770221L;
 	private ArrayList<String> path = new ArrayList<String>();
 	
 	RelativePath(String pathAsString) {
@@ -32,19 +36,6 @@ public class RelativePath implements Serializable {
 		
 		//Utils.logD("Created RelativePath from Array: " + toString());
 	}
-	
-//	RelativePath(Path path) {
-//		this.path = new ArrayList<String>();
-//		Iterator<Path> pathIterator = path.iterator();
-//		Path member = null;
-//		
-//		while (pathIterator.hasNext()) {
-//			member = pathIterator.next();
-//			this.path.add(member.toString());
-//		}
-//		
-//		//Utils.logD("Created RelativePath from Path: " + toString() + " (memberCount: " + memberCount + ")");
-//	}
 	
 	RelativePath() {
 		path = new ArrayList<String>();
@@ -75,10 +66,6 @@ public class RelativePath implements Serializable {
 		}
 		return pathString;
 	}
-	
-//	public Path toPath() {
-//		return Paths.get(toString());
-//	}
 	
 	public RelativePath getPathRelativeTo(RelativePath otherPath) {
 		ArrayList<String> newPath = new ArrayList<String>();

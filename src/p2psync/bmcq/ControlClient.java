@@ -1,24 +1,15 @@
 package p2psync.bmcq;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
-import java.nio.file.Path;
 
 public class ControlClient extends Client {
 	
 	protected FileClient fileClient;
-	private RelativePath rootDirectory;
 	private FileInfo rootFileInfo;
 	
 	ControlClient(InetAddress host, int port, RelativePath rootDirectory, FileInfo rootFileInfo) {
 		super(host,port);
 		fileClient = new FileClient(host,port + 1,this);
-		this.rootDirectory = rootDirectory;
 		this.rootFileInfo = rootFileInfo;
 	}
 	
@@ -30,9 +21,7 @@ public class ControlClient extends Client {
 			command = readLine();
 			Utils.logD("Incoming Command: " + command);
 		}
-		
-		FileInfo fileInfo = null;
-				
+			
 		
 		//Initial key request and file sync request
 		while (state == 2) {

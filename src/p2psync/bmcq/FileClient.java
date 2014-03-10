@@ -31,14 +31,11 @@ public class FileClient extends Client {
 	}
 	
 	public void sendFile(FileInfo fileInfo) {
-		//FileInfo fileInfo = file.generateFileInfo();
 		FileInputStream fileInput;
 		int bufferSize = 4096;
 		byte[] buffer = new byte[bufferSize];
-		String command = "";
 		int read = 0;
 		
-			//TODO: Send file
 		try {
 			fileInput = new FileInputStream(fileInfo.getFile());
 			if (!isConnected()) {
@@ -49,11 +46,10 @@ public class FileClient extends Client {
 				output.write(buffer, 0, read);
 				//sent += read;
 			}
+			
 			output.flush();
 			control.command_echo("request:done");
 			fileInput.close();
-			//close();
-
 		} catch (IOException ioe) {
 			Utils.logE("FileClient->sendFile(): " + ioe.getMessage());
 			System.exit(1);

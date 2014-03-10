@@ -3,6 +3,10 @@ package p2psync.bmcq;
 import java.io.Serializable;
 
 public class SyncInfo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4130923471999661699L;
 	private boolean modified;
 	private boolean deleted;
 	private boolean conflicted;

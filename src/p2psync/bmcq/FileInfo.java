@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,14 +27,12 @@ public class FileInfo extends SyncInfo implements Serializable {
 	private HashMap<String, FileInfo> completeHashMap;
 	private boolean directory;	//True if directory rather than a file
 	
-	private long objectTimeStamp;	//When object was generated
 	private String localRootPath;
 	
 	FileInfo(File file, FileInfo parent) {
 		super();
 		this.file = file;
 		this.parent = parent;
-		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
 		completeHashMap = new HashMap<String,FileInfo>();
 		constructFromFile();
 	}
@@ -48,7 +44,6 @@ public class FileInfo extends SyncInfo implements Serializable {
 		this.modifiedDate = modifiedDate;
 		this.length = length;
 		this.parent = parent;
-		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
 		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
 		children = null;
 		directory = false;
@@ -61,7 +56,6 @@ public class FileInfo extends SyncInfo implements Serializable {
 		this.path = path;
 		this.modifiedDate = modifiedDate;
 		this.length = (long) 0;	//NA
-		this.objectTimeStamp = System.currentTimeMillis() / 1000L;
 		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
 		children = new FileInfo[childrenLength];
 		directory = true;
@@ -137,7 +131,6 @@ public class FileInfo extends SyncInfo implements Serializable {
 	}
 	
 	public void export() {																			//Export serialized object for next sync
-			//TODO: Add clean up of deleted files
 		String path = ".lastRun.bmh";
 		try {
 			File file = new File(localRootPath + File.separator + path);
@@ -198,8 +191,6 @@ public class FileInfo extends SyncInfo implements Serializable {
 						pfi.setDeleted(true);											//Didn't find the previous file, must've been deleted
 						deletedFileInfo.add(pfi);
 					}
-									
-					//TODO:Other cases like deleted etc
 				} else {
 					if (matchedFileInfo != null) {
 						matchedFileInfo.setAnalysed(true);

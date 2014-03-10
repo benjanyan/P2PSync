@@ -1,12 +1,5 @@
 package p2psync.bmcq;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,8 +52,6 @@ public class ControlServer extends Server {
 		}
 		
 		FileInfo remoteFileInfo = null;
-		FileInfo fileInfo = null;
-		//Directory directory = new Directory(rootDirectory, false, rootDirectory);
 		
 		while (state == 2) {
 			command_request("command");
@@ -84,12 +75,7 @@ public class ControlServer extends Server {
 				rootFileInfo.detectConflicts(remoteFileInfo);
 				
 				remoteFileInfo.printContents();
-				
 				sync.executeSync();
-				
-				//fileInfo = new FileInfo(new File(rootDirectory),null);
-				//fileInfo.export();
-
 			} else {
 				command_echo("Wut?");
 			}
