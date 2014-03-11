@@ -7,7 +7,7 @@ public class ControlClient extends Client {
 	protected FileClient fileClient;
 	private FileInfo rootFileInfo;
 	
-	ControlClient(InetAddress host, int port, RelativePath rootDirectory, FileInfo rootFileInfo) {
+	ControlClient(InetAddress host, int port, Path rootDirectory, FileInfo rootFileInfo) {
 		super(host,port);
 		fileClient = new FileClient(host,port + 1,this);
 		this.rootFileInfo = rootFileInfo;

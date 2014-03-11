@@ -6,6 +6,10 @@ public class Utils {
 		return System.getProperty("java.vm.name").equalsIgnoreCase("dalvik");
 	}
 	
+	static boolean isLinux() {
+		return System.getProperty("os.name").matches("Linux");
+	}
+	
 	static void logD(String message) {
 		if (isAndroid()) {
 			//Log.d("P2PSync", message);

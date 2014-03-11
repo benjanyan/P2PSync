@@ -4,10 +4,10 @@ import java.io.File;
 
 public class Sync {
 	private FileInfo syncInfo;
-	private RelativePath rootDirectory;
+	private Path rootDirectory;
 	private ControlServer control;
 	
-	Sync(FileInfo syncInfo, RelativePath rootDirectory, ControlServer control) {
+	Sync(FileInfo syncInfo, Path rootDirectory, ControlServer control) {
 		this.syncInfo = syncInfo;
 		this.rootDirectory = rootDirectory;
 		this.control = control;

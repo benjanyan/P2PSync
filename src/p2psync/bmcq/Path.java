@@ -5,14 +5,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class RelativePath implements Serializable {
+public class Path implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3968651610332770221L;
 	private ArrayList<String> path = new ArrayList<String>();
+	private boolean isAbsolute;
 	
-	RelativePath(String pathAsString) {
+	Path(String pathAsString) {
 		this.path = new ArrayList<String>();
 		String separator;
 		
@@ -22,6 +23,14 @@ public class RelativePath implements Serializable {
 			separator = File.separator;
 		}
 		
+		if (pathAsString.charAt(0) == '/' && Utils.isLinux()) {
+			isAbsolute = true;
+		} else if (pathAsString.charAt(1) == ':' && !Utils.isLinux()) {
+			isAbsolute = true;
+		} else {
+			isAbsolute = false;
+		}
+		
 		String[] newPath = pathAsString.split(separator);
 		
 		for (String member : newPath) {
@@ -29,19 +38,19 @@ public class RelativePath implements Serializable {
 		}
 	}
 	
-	RelativePath(String... members) {
-		for(String member : members) {
-			path.add(member);
-		}
-		
-		//Utils.logD("Created RelativePath from Array: " + toString());
-	}
+//	Path(String... members) {
+//		for(String member : members) {
+//			path.add(member);
+//		}
+//		
+//		//Utils.logD("Created RelativePath from Array: " + toString());
+//	}
 	
-	RelativePath() {
+	Path() {
 		path = new ArrayList<String>();
 	}
 	
-	RelativePath(ArrayList<String> newPath) {
+	Path(ArrayList<String> newPath) {
 		path = newPath;
 	}
 	
@@ -57,6 +66,11 @@ public class RelativePath implements Serializable {
 		String pathString = "";
 		Iterator<String> pathIterator = path.iterator();
 		String member = null;
+		
+		if (isAbsolute && Utils.isLinux()) {
+			pathString = "/";
+		}
+		
 		while(pathIterator.hasNext()) {
 			member = pathIterator.next();
 			pathString = pathString + member;
@@ -67,7 +81,7 @@ public class RelativePath implements Serializable {
 		return pathString;
 	}
 	
-	public RelativePath getPathRelativeTo(RelativePath otherPath) {
+	public Path getPathRelativeTo(Path otherPath) {
 		ArrayList<String> newPath = new ArrayList<String>();
 		int i = 0;
 		
@@ -81,6 +95,6 @@ public class RelativePath implements Serializable {
 			newPath.add(this.getMember(i));
 			++i;
 		}		
-		return new RelativePath(newPath);		
+		return new Path(newPath);		
 	}
 }

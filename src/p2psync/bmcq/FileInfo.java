@@ -16,7 +16,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = -8865725152813983428L;
 	private String name;		//File's name
-	private RelativePath path;		//The path relative to the root directory
+	private Path path;		//The path relative to the root directory
 	private Long modifiedDate;
 	private Long length;		//Size in bytes
 	private String id;
@@ -37,7 +37,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		constructFromFile();
 	}
 	
-	FileInfo(String name, RelativePath path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
+	FileInfo(String name, Path path, Long modifiedDate, Long length, FileInfo parent) {	//Constructor for File
 		super();
 		this.name = name;
 		this.path = path;
@@ -50,7 +50,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		completeHashMap = null;
 	}
 	
-	FileInfo(String name, RelativePath path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
+	FileInfo(String name, Path path, Long modifiedDate, FileInfo parent, int childrenLength) {	//Constructor for Directory
 		super();
 		this.name = name;
 		this.path = path;
@@ -237,16 +237,16 @@ public class FileInfo extends SyncInfo implements Serializable {
 		}
 	}
 	
-	private RelativePath getPathRelativeToRoot() {
+	private Path getPathRelativeToRoot() {
 		if (parent != null && parent.getParent() != null) {
-			RelativePath fullPath = new RelativePath(file.getPath());
-			RelativePath rootPath = new RelativePath(getRoot().getLocalRootPath());
+			Path fullPath = new Path(file.getPath());
+			Path rootPath = new Path(getRoot().getLocalRootPath());
 			return fullPath.getPathRelativeTo(rootPath);
 		} else {
 			if (parent == null) {
-				return new RelativePath();
+				return new Path();
 			} else {
-				return new RelativePath(name);
+				return new Path(name);
 			}
 		}
 	}
@@ -393,7 +393,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return name;
 	}
 	
-	public RelativePath getPath() {
+	public Path getPath() {
 		return path;
 	}
 	

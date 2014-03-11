@@ -10,7 +10,7 @@ public class MainClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RelativePath localSyncDirectory = new RelativePath("G:", "test");	//Without trailing slash
+		Path localSyncDirectory = new Path("G:/test");	//Without trailing slash
 		String hostName = "kyouko.portsmouth";
 		InetAddress host = null;
 		FileInfo rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);

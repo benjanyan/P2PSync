@@ -10,10 +10,10 @@ public class FileServer extends Server {
 	private FileOutputStream fileOutput;
 	protected InputStream fileInput;
 	private ControlServer controlServer;
-	protected RelativePath rootDirectory;
+	protected Path rootDirectory;
 	
 
-	FileServer(int port, ControlServer controlServer, RelativePath rootDirectory) {
+	FileServer(int port, ControlServer controlServer, Path rootDirectory) {
 		super(port);
 		this.controlServer = controlServer;
 		this.rootDirectory = rootDirectory;

@@ -6,10 +6,10 @@ import java.util.regex.Pattern;
 
 public class ControlServer extends Server {
 	private FileServer fileServer;
-	private RelativePath rootDirectory;
+	private Path rootDirectory;
 	private FileInfo rootFileInfo;
 	
-	ControlServer(int port, RelativePath rootDirectory, FileInfo rootFileInfo) {
+	ControlServer(int port, Path rootDirectory, FileInfo rootFileInfo) {
 		super(port);
 		this.description = "Control Server";
 		this.rootDirectory = rootDirectory;
