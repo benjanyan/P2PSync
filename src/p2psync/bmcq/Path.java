@@ -23,13 +23,13 @@ public class Path implements Serializable {
 			separator = File.separator;
 		}
 		
-		if (pathAsString.charAt(0) == '/' && Utils.isLinux()) {
-			isAbsolute = true;
-		} else if (pathAsString.charAt(1) == ':' && !Utils.isLinux()) {
-			isAbsolute = true;
-		} else {
-			isAbsolute = false;
-		}
+		//if (pathAsString.charAt(0) == '/' && Utils.isLinux()) {
+		//	isAbsolute = true;
+		//} else if (pathAsString.charAt(1) == ':' && !Utils.isLinux()) {
+		//	isAbsolute = true;
+		//} else {
+		//	isAbsolute = false;
+		//}
 		
 		String[] newPath = pathAsString.split(separator);
 		
@@ -61,9 +61,9 @@ public class Path implements Serializable {
 		Iterator<String> pathIterator = path.iterator();
 		String member = null;
 		
-		if (isAbsolute && Utils.isLinux()) {
-			pathString = "/";
-		}
+		//if (isAbsolute && Utils.isLinux()) {
+			//pathString = "/";
+		//}
 		
 		while(pathIterator.hasNext()) {
 			member = pathIterator.next();
