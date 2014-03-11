@@ -52,13 +52,13 @@ public class Sync {
 	
 	private void recursiveDelete(File[] files) {
 		for (File file : files) {
-			if (file.isDirectory()) {
+			if (file.isDirectory() && file.listFiles().length > 0) {
 				recursiveDelete(file.listFiles());
 			} else {
 				if (file.delete()) {
-					Utils.logE("Failed to delete " + file.getPath());
-				} else {
 					Utils.logD("Deleted: " + file.getPath());
+				} else {
+					Utils.logE("Failed to delete " + file.getPath());
 				}
 				
 			}
