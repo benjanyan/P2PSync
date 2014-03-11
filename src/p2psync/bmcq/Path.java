@@ -36,15 +36,9 @@ public class Path implements Serializable {
 		for (String member : newPath) {
 			this.path.add(member);
 		}
+		
+		Utils.logD("Created new Path object: " + toString());
 	}
-	
-//	Path(String... members) {
-//		for(String member : members) {
-//			path.add(member);
-//		}
-//		
-//		//Utils.logD("Created RelativePath from Array: " + toString());
-//	}
 	
 	Path() {
 		path = new ArrayList<String>();
