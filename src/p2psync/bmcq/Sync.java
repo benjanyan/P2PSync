@@ -24,11 +24,15 @@ public class Sync {
 			} else if (item.isIgnored()) {
 				//Nothing
 			} else if (item.isDirectory() && item.isModified()) {
-				if ((new File(rootDirectory.toString() + File.separator + item.getPathAsString())).mkdir()) {
-					Utils.logD("Created folder: " + rootDirectory.toString() + File.separator + item.getPathAsString());
+				File itemFile = new File(rootDirectory.toString() + File.separator + item.getPathAsString());
+				if (itemFile.exists()) {
 					executeSync(item);
 				} else {
-					Utils.logE("Failed to create folder: " + rootDirectory.toString() + File.separator+ item.getPathAsString());
+					if (itemFile.mkdir()) {
+						Utils.logD("Created folder: " + rootDirectory.toString() + File.separator + item.getPathAsString());
+					} else {
+						Utils.logE("Failed to create folder: " + rootDirectory.toString() + File.separator+ item.getPathAsString());
+					}
 				}
 			} else if (item.isModified()) {
 				if (!item.getName().matches(".*.bmh")) {
