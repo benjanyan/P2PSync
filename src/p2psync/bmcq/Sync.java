@@ -23,10 +23,10 @@ public class Sync {
 				delete(item);
 			} else if (item.isIgnored()) {
 				//Nothing
-			} else if(item.isDirectory() && item.isModified()) {
+			} else if (item.isDirectory() && item.isModified()) {
 				if ((new File(rootDirectory.toString() + File.separator + item.getPathAsString())).mkdir()) {
+					Utils.logD("Created folder: " + rootDirectory.toString() + File.separator + item.getPathAsString());
 					executeSync(item);
-					Utils.logD("Created folder..");
 				} else {
 					Utils.logE("Failed to create folder: " + rootDirectory.toString() + File.separator+ item.getPathAsString());
 				}

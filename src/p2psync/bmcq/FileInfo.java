@@ -186,7 +186,11 @@ public class FileInfo extends SyncInfo implements Serializable {
 				if (!pfi.isDirectory()) {
 					if (matchedFileInfo != null) {
 						matchedFileInfo.setAnalysed(true);
-						matchedFileInfo.setModified(matchedFileInfo.isNewer(pfi));
+						if (matchedFileInfo.isNewer(pfi)) {
+							matchedFileInfo.recurseModifiedToParents(true);
+						} else {
+							matchedFileInfo.setModified(false);
+						}
 					} else {
 						pfi.setDeleted(true);											//Didn't find the previous file, must've been deleted
 						deletedFileInfo.add(pfi);
@@ -481,5 +485,12 @@ public class FileInfo extends SyncInfo implements Serializable {
 	
 	public void setLocalRootPath(String localRootPath) {
 		this.localRootPath = localRootPath;
+	}
+	
+	private void recurseModifiedToParents(boolean modified) {
+		setModified(modified);
+		if (getParent() != null) {
+			recurseModifiedToParents(modified);
+		}
 	}
 }
