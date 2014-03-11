@@ -30,6 +30,7 @@ public class Sync {
 				} else {
 					if (itemFile.mkdir()) {
 						Utils.logD("Created folder: " + rootDirectory.toString() + File.separator + item.getPathAsString());
+						executeSync(item);
 					} else {
 						Utils.logE("Failed to create folder: " + rootDirectory.toString() + File.separator+ item.getPathAsString());
 					}

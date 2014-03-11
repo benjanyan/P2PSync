@@ -193,6 +193,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 						}
 					} else {
 						pfi.setDeleted(true);											//Didn't find the previous file, must've been deleted
+						setModifiedAndParents(true);
 						deletedFileInfo.add(pfi);
 					}
 				} else {
@@ -201,6 +202,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 						matchedFileInfo.setFlags(pfi);
 					} else {
 						pfi.setDeleted(true);											//Didn't find the current file, must've been deleted
+						setModifiedAndParents(true);
 						deletedFileInfo.add(pfi);
 					}
 				}
