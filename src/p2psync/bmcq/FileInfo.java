@@ -491,7 +491,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	private void setModifiedAndParents(boolean modified) {
 		setModified(modified);
 		if (getParent() != null) {
-			setModifiedAndParents(modified);
+			getParent().setModifiedAndParents(modified);
 		}
 	}
 }
