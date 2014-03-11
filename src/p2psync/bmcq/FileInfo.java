@@ -187,7 +187,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 					if (matchedFileInfo != null) {
 						matchedFileInfo.setAnalysed(true);
 						if (matchedFileInfo.isNewer(pfi)) {
-							matchedFileInfo.recurseModifiedToParents(true);
+							matchedFileInfo.setModifiedAndParents(true);
 						} else {
 							matchedFileInfo.setModified(false);
 						}
@@ -215,6 +215,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 			for (FileInfo cfi : getChildren()) {										//If they weren't analysed by the loop above, they're new files.
 				if (!cfi.isAnalysed() && !cfi.isDeleted()) {
 					cfi.setModified(true);
+					cfi.setModifiedAndParents(true);
 					if (cfi.isDirectory()) {
 						cfi.setFlags(null);
 					}
@@ -222,7 +223,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 			}
 		} else {																//No previous data, we'll assume it's all new.
 			for (FileInfo cfi : getChildren()) {
-				cfi.setModified(true);
+				cfi.setModifiedAndParents(true);
 				if (cfi.isDirectory()) {
 					cfi.setFlags(null);
 				}
@@ -487,10 +488,10 @@ public class FileInfo extends SyncInfo implements Serializable {
 		this.localRootPath = localRootPath;
 	}
 	
-	private void recurseModifiedToParents(boolean modified) {
+	private void setModifiedAndParents(boolean modified) {
 		setModified(modified);
 		if (getParent() != null) {
-			recurseModifiedToParents(modified);
+			setModifiedAndParents(modified);
 		}
 	}
 }
