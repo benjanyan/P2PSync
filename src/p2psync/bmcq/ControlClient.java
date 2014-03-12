@@ -19,6 +19,7 @@ public class ControlClient extends Client {
 		rootFileInfo = new FileInfo(new File(rootDirectory.toString()), null);
 		rootFileInfo.setFlags();
 		rootFileInfo.refreshHashMap();
+		connect();
 		control();
 	}
 	
