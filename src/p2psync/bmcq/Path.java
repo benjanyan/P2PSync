@@ -11,7 +11,6 @@ public class Path implements Serializable {
 	 */
 	private static final long serialVersionUID = -3968651610332770221L;
 	private ArrayList<String> path = new ArrayList<String>();
-	private boolean isAbsolute;
 	
 	Path(String pathAsString) {
 		this.path = new ArrayList<String>();
@@ -22,14 +21,6 @@ public class Path implements Serializable {
 		} else {
 			separator = File.separator;
 		}
-		
-		//if (pathAsString.charAt(0) == '/' && Utils.isLinux()) {
-		//	isAbsolute = true;
-		//} else if (pathAsString.charAt(1) == ':' && !Utils.isLinux()) {
-		//	isAbsolute = true;
-		//} else {
-		//	isAbsolute = false;
-		//}
 		
 		String[] newPath = pathAsString.split(separator);
 		
@@ -60,10 +51,6 @@ public class Path implements Serializable {
 		String pathString = "";
 		Iterator<String> pathIterator = path.iterator();
 		String member = null;
-		
-		//if (isAbsolute && Utils.isLinux()) {
-			//pathString = "/";
-		//}
 		
 		while(pathIterator.hasNext()) {
 			member = pathIterator.next();

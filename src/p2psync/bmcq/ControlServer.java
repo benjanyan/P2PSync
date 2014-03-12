@@ -27,6 +27,7 @@ public class ControlServer extends Server {
 	
 	public void restart() {
 		this.rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
+		fileServer = new FileServer(port + 1, this, rootDirectory);
 		run();
 	}
 	
