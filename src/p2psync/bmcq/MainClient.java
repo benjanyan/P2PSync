@@ -24,13 +24,10 @@ public class MainClient {
 		controlClient.setKey("jd874jks893ka");
 		ControlServer server = new ControlServer(5555, localSyncDirectory);
 		server.setKey("jd874jks893ka");
-		
-		while (true) {
+		controlClient.run();
 
-			controlClient.run();
-			controlClient.exportFileInfo();	
-			controlClient = null;
-			server.restart();
-		}
+		controlClient = null;
+		server.run();
+		server.exportFileInfo();
 	}
 }
