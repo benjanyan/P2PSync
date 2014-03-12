@@ -1,6 +1,5 @@
 package p2psync.bmcq;
 
-import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -13,10 +12,6 @@ public class MainClient {
 		Path localSyncDirectory = new Path("/home/yuki_n/test");	//Without trailing slash
 		String hostName = "kyouko.portsmouth";
 		InetAddress host = null;
-		FileInfo rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);
-		
-		rootFileInfo.setFlags();
-		rootFileInfo.refreshHashMap();
 				
 		try {
 			host = InetAddress.getByName(hostName);
@@ -25,18 +20,17 @@ public class MainClient {
 			e.printStackTrace();
 		}
 		
-		ControlClient controlClient = new ControlClient(host, 5555, localSyncDirectory, rootFileInfo);
+		ControlClient controlClient = new ControlClient(host, 5555, localSyncDirectory);
 		controlClient.setKey("jd874jks893ka");
-		controlClient.connect();
-		controlClient.control();
-
-		
-		ControlServer server = new ControlServer(5555, localSyncDirectory, rootFileInfo);
+		ControlServer server = new ControlServer(5555, localSyncDirectory);
 		server.setKey("jd874jks893ka");
-		server.run();
-		server = null;
 		
-		rootFileInfo = new FileInfo(new File(localSyncDirectory.toString()),null);
-		rootFileInfo.export();
+		while (true) {
+
+			controlClient.run();
+			controlClient.exportFileInfo();	
+			controlClient = null;
+			server.restart();
+		}
 	}
 }

@@ -1,16 +1,30 @@
 package p2psync.bmcq;
 
+import java.io.File;
 import java.net.InetAddress;
 
 public class ControlClient extends Client {
 	
 	protected FileClient fileClient;
 	private FileInfo rootFileInfo;
+	private Path rootDirectory;
 	
-	ControlClient(InetAddress host, int port, Path rootDirectory, FileInfo rootFileInfo) {
+	ControlClient(InetAddress host, int port, Path rootDirectory) {
 		super(host,port);
 		fileClient = new FileClient(host,port + 1,this);
-		this.rootFileInfo = rootFileInfo;
+		this.rootDirectory = rootDirectory;
+	}
+	
+	public void run() {
+		rootFileInfo = new FileInfo(new File(rootDirectory.toString()), null);
+		rootFileInfo.setFlags();
+		rootFileInfo.refreshHashMap();
+		control();
+	}
+	
+	public void exportFileInfo() {
+		rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
+		rootFileInfo.export();
 	}
 	
 	protected void control() {
