@@ -59,11 +59,16 @@ public class Sync {
 		for (File file : files) {
 			if (file.isDirectory() && file.listFiles().length > 0) {
 				recursiveDelete(file.listFiles());
+				if (file.delete()) {
+					Utils.logD("Deleted folder: " + file.getPath());
+				} else {
+					Utils.logE("Failed to delete folder: " + file.getPath());
+				}
 			} else {
 				if (file.delete()) {
 					Utils.logD("Deleted: " + file.getPath());
 				} else {
-					Utils.logE("Failed to delete " + file.getPath());
+					Utils.logE("Failed to delete: " + file.getPath());
 				}
 				
 			}
