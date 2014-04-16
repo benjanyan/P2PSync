@@ -33,7 +33,7 @@ public class FileServer extends Server {
 		if (!isConnected()) {
 			listen();
 			try {
-				fileInput = socket.getInputStream();
+				fileInput = socket.getInputStream();	//Isn't this already in the super class as "input"?
 			} catch (IOException ioe) {
 				Utils.logE("FileServer: Failed to create file input stream: " + ioe.getMessage());
 				System.exit(1);
