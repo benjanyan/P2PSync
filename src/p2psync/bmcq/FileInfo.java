@@ -467,24 +467,6 @@ public class FileInfo extends SyncInfo implements Serializable {
 		modifiedDate = modified;
 	}
 	
-	public FileInfo[] getTransferFiles() {
-		ArrayList<FileInfo> transferFiles = getTransferFiles(new ArrayList<FileInfo>());
-		return transferFiles.toArray(new FileInfo[transferFiles.size()]);
-	}
-	
-	public ArrayList<FileInfo> getTransferFiles(ArrayList<FileInfo> transferFiles) {
-		for (FileInfo child : getChildren()) {
-			if (!child.isDirectory()) {
-				if (child.isModified()) {
-					transferFiles.add(child);
-				}
-			} else {
-				getTransferFiles(transferFiles);
-			}
-		}
-		
-		return transferFiles;
-	}
 	
 	public void setLocalRootPath(String localRootPath) {
 		this.localRootPath = localRootPath;

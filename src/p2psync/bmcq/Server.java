@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -18,9 +20,11 @@ public class Server {
 	protected String description;
 	protected String key;
 	private InetAddress clientAddress;
+	protected Path rootDirectory;
 	
-	Server(int port) {
+	Server(int port, Path rootDirectory) {
 		this.port = port;
+		this.rootDirectory = rootDirectory;
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException ioe) {
@@ -171,5 +175,16 @@ public class Server {
 	
 	protected void command_request(String thing) {
 		command_echo("request:" + thing);
+	}
+	
+	protected String getParam(String command, String regEx, int paramNo) {
+		Pattern pattern = Pattern.compile(regEx);
+		Matcher matcher = pattern.matcher(command);
+		
+		if (matcher.matches()) {
+			return matcher.group(paramNo);
+		} else {
+			return "";
+		}
 	}
 }

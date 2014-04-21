@@ -8,15 +8,12 @@ import java.io.InputStream;
 public class FileServer extends Server {
 	
 	private FileOutputStream fileOutput;
-	protected InputStream fileInput;
 	private ControlServer controlServer;
-	protected Path rootDirectory;
 	
 
 	FileServer(int port, ControlServer controlServer, Path rootDirectory) {
-		super(port);
+		super(port, rootDirectory);
 		this.controlServer = controlServer;
-		this.rootDirectory = rootDirectory;
 		this.description = "File server";
 	}
 	
@@ -32,12 +29,6 @@ public class FileServer extends Server {
 		
 		if (!isConnected()) {
 			listen();
-			try {
-				fileInput = socket.getInputStream();	//Isn't this already in the super class as "input"?
-			} catch (IOException ioe) {
-				Utils.logE("FileServer: Failed to create file input stream: " + ioe.getMessage());
-				System.exit(1);
-			}
 		}
 				
 		try {
@@ -45,7 +36,7 @@ public class FileServer extends Server {
 			fileOutput = new FileOutputStream(localFile);
 			
 			while (received < fileInfo.getLength()) {
-				read = fileInput.read(data);
+				read = input.read(data);
 				fileOutput.write(data,0,read);
 				received += read;
 			}

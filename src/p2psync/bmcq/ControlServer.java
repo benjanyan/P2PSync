@@ -1,19 +1,16 @@
 package p2psync.bmcq;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 
 public class ControlServer extends Server {
 	private FileServer fileServer;
-	private Path rootDirectory;
 	private FileInfo rootFileInfo;
 	
 	ControlServer(int port, Path rootDirectory) {
-		super(port);
+		super(port, rootDirectory);
 		this.description = "Control Server";
-		this.rootDirectory = rootDirectory;
 		fileServer = new FileServer(port + 1, this, rootDirectory);
 	}
 	
@@ -35,18 +32,6 @@ public class ControlServer extends Server {
 		rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
 		rootFileInfo.export();
 	}
-	
-	private String getParam(String command, String regEx, int paramNo) {
-		Pattern pattern = Pattern.compile(regEx);
-		Matcher matcher = pattern.matcher(command);
-		
-		if (matcher.matches()) {
-			return matcher.group(paramNo);
-		} else {
-			return "";
-		}
-	}
-
 	
 	private void control() {
 		int state = 1;

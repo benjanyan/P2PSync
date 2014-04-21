@@ -56,15 +56,4 @@ public class FileClient extends Client {
 		}
 	}
 	
-	private String getParam(String command, String regEx, int paramNo) {
-		Pattern pattern = Pattern.compile(regEx);
-		Matcher matcher = pattern.matcher(command);
-		
-		if (matcher.matches()) {
-			return matcher.group(paramNo);
-		} else {
-			return "";
-		}
-	}
-	
 }
