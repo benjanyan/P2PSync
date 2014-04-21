@@ -3,7 +3,6 @@ package p2psync.bmcq;
 import java.io.File;
 
 
-
 public class ControlServer extends Server {
 	private FileServer fileServer;
 	private FileInfo rootFileInfo;

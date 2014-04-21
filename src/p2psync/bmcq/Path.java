@@ -28,7 +28,7 @@ public class Path implements Serializable {
 			this.path.add(member);
 		}
 		
-		Utils.logD("Created new Path object: " + toString());
+		//Utils.logD("Created new Path object: " + toString());
 	}
 	
 	Path() {
