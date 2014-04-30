@@ -20,7 +20,7 @@ public class Server {
 	protected OutputStream output;
 	protected String description;
 	protected String key;
-	private InetAddress clientAddress;
+	private ServerIP clientAddress;
 	protected Path rootDirectory;
 	public ServerIP serverIp;
 	
@@ -42,7 +42,7 @@ public class Server {
 			input = socket.getInputStream();
 			output = socket.getOutputStream();
 			
-			clientAddress = socket.getInetAddress();
+			clientAddress = new ServerIP(socket.getInetAddress());
 			
 		} catch (IOException exception) {
 			System.err.print(description + " failed to create socket, listen and accept connection: " + exception.getMessage());
@@ -123,7 +123,7 @@ public class Server {
 		return socket != null;
 	}
 	
-	public InetAddress getClientAddress() {
+	public ServerIP getClientAddress() {
 		return clientAddress;
 	}
 	

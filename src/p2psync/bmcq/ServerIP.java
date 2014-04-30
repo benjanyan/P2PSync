@@ -9,6 +9,7 @@ public class ServerIP {
 	
 	ServerIP(InetAddress server) {
 		this.localIp = server;
+		this.externalIp = server;
 	}
 
 }
