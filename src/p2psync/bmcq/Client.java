@@ -29,17 +29,21 @@ public class Client {
 
 	public void connect() {
 		InetAddress host = this.host.externalIp;
-		for (int i = 0; i < 2; ++i) {
+		boolean retry = true;
+		boolean retried = false;
+		while (retry) {
 			Utils.logD("Client: Connecting to " + host + ":" + port + "...");
 			try {
 				socket = new Socket(host,port);
 				input = socket.getInputStream();
 				output = socket.getOutputStream();
 				isConnected = true;
+				retry = false;
 			} catch (IOException exception) {
 				System.err.print("Client: Failed to connect to server: " + exception.getMessage());
-				if (i == 0) {
+				if (!retried) {
 					host = this.host.localIp;
+					retried = true;
 				} else {
 					System.exit(1);
 				}
