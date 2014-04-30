@@ -9,7 +9,7 @@ public class ControlClient extends Client {
 	private FileInfo rootFileInfo;
 	private Path rootDirectory;
 	
-	ControlClient(InetAddress host, int port, Path rootDirectory) {
+	ControlClient(ServerIP host, int port, Path rootDirectory) {
 		super(host,port);
 		fileClient = new FileClient(host,port + 1,this);
 		this.rootDirectory = rootDirectory;

@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Client {
-	protected InetAddress host;
+	protected ServerIP host;
 	protected int port;
 	protected Socket socket;
 	protected InputStream input;
@@ -20,7 +20,7 @@ public class Client {
 	private boolean isConnected;
 
 	
-	Client(InetAddress host, int port) {
+	Client(ServerIP host, int port) {
 		this.host = host;
 		this.port = port;
 		this.isConnected = false;
@@ -28,15 +28,22 @@ public class Client {
 	
 
 	public void connect() {
-		Utils.logD("Client: Connecting to " + host + ":" + port + "...");
-		try {
-			socket = new Socket(host,port);
-			input = socket.getInputStream();
-			output = socket.getOutputStream();
-			isConnected = true;
-		} catch (IOException exception) {
-			System.err.print("Client: Failed to connect to server: " + exception.getMessage());
-			System.exit(1);
+		String host = this.host.externalIp.toString();
+		for (int i = 0; i < 2; ++i) {
+			Utils.logD("Client: Connecting to " + host + ":" + port + "...");
+			try {
+				socket = new Socket(host,port);
+				input = socket.getInputStream();
+				output = socket.getOutputStream();
+				isConnected = true;
+			} catch (IOException exception) {
+				System.err.print("Client: Failed to connect to server: " + exception.getMessage());
+				if (i == 0) {
+					host = this.host.localIp.toString();
+				} else {
+					System.exit(1);
+				}
+			}
 		}
 	}
 	

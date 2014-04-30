@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,20 +22,22 @@ public class Server {
 	protected String key;
 	private InetAddress clientAddress;
 	protected Path rootDirectory;
+	public ServerIP serverIp;
 	
 	Server(int port, Path rootDirectory) {
 		this.port = port;
 		this.rootDirectory = rootDirectory;
-		try {
-			serverSocket = new ServerSocket(port);
-		} catch (IOException ioe) {
-			System.err.print(description + ": failed to create ServerSocket: " + ioe.getMessage());
-		}
+		serverIp = null;
 	}
 	
 	public void listen() {
-		Utils.logD(description + ": listening on port " + port);
+		if (isConnected()) {
+			close();
+		}
+		
 		try {
+			serverSocket = new ServerSocket(port);
+			Utils.logD(description + ": attempting to listen on port " + port);
 			socket = serverSocket.accept();
 			input = socket.getInputStream();
 			output = socket.getOutputStream();
@@ -42,7 +45,9 @@ public class Server {
 			clientAddress = socket.getInetAddress();
 			
 		} catch (IOException exception) {
-			System.err.print(description + " failed to listen and accept connection: " + exception.getMessage());
+			System.err.print(description + " failed to create socket, listen and accept connection: " + exception.getMessage());
+		} finally {
+			Utils.logD(description + ": Client " + socket.getRemoteSocketAddress() + " is connected!");
 		}
 	}
 	
@@ -59,6 +64,19 @@ public class Server {
 			System.err.print(description + " failed to close: " + ioe.getMessage());
 		}
 	}
+	
+	public void informMasterServer() {
+		ServerDiscover serverDiscover = new ServerDiscover();
+		
+		try {
+			serverIp = new ServerIP(InetAddress.getLocalHost());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		serverDiscover.setServerIP(serverIp);
+	}
+	
 	
 	protected void setKey(String key) {
 		this.key = key;

@@ -8,12 +8,12 @@ public class MainServer {
 			Path localSyncDirectory = new Path("G:/test");	//Without trailing slash
 			ControlServer server = new ControlServer(5555, localSyncDirectory);
 			server.setKey("jd874jks893ka");
+			server.informMasterServer();
 			server.run();
 			
 			while (true) {
-				InetAddress host = server.getClientAddress();
 				
-				ControlClient controlClient = new ControlClient(host, 5555, localSyncDirectory);
+				ControlClient controlClient = new ControlClient(server.serverIp, 5555, localSyncDirectory);
 				controlClient.setKey("jd874jks893ka");
 				controlClient.run();
 				controlClient.exportFileInfo();	

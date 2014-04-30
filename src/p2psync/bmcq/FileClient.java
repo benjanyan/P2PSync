@@ -11,7 +11,7 @@ public class FileClient extends Client {
 
 	private ControlClient control;
 
-	FileClient(InetAddress host, int port, ControlClient control) {
+	FileClient(ServerIP host, int port, ControlClient control) {
 		super(host,port);
 		this.control = control;
 	}
