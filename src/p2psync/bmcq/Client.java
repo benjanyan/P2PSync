@@ -28,7 +28,7 @@ public class Client {
 	
 
 	public void connect() {
-		String host = this.host.externalIp.toString();
+		InetAddress host = this.host.externalIp;
 		for (int i = 0; i < 2; ++i) {
 			Utils.logD("Client: Connecting to " + host + ":" + port + "...");
 			try {
@@ -39,7 +39,7 @@ public class Client {
 			} catch (IOException exception) {
 				System.err.print("Client: Failed to connect to server: " + exception.getMessage());
 				if (i == 0) {
-					host = this.host.localIp.toString();
+					host = this.host.localIp;
 				} else {
 					System.exit(1);
 				}
