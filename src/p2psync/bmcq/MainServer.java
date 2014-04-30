@@ -13,7 +13,7 @@ public class MainServer {
 			
 			while (true) {
 				
-				ControlClient controlClient = new ControlClient(server.serverIp, 5555, localSyncDirectory);
+				ControlClient controlClient = new ControlClient(server.getClientAddress(), 5555, localSyncDirectory);
 				controlClient.setKey("jd874jks893ka");
 				controlClient.run();
 				controlClient.exportFileInfo();	
