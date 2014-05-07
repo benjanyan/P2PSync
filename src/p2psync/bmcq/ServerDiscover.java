@@ -12,15 +12,16 @@ import com.google.gson.*;
 public class ServerDiscover {
 	
 	public ServerIP getServerIP() {
-		Gson gson = new Gson();
-		return gson.fromJson(httpGet("http://stuff.bmcq.co.uk/p2psync/getServer.php?key=q5mAKKZdn6ke9ghVa7YbE7uM"), ServerIP.class);
+		Gson gson = new Gson();		//Allows Java objects -> JSON
+		return gson.fromJson(httpGet("http://stuff.bmcq.co.uk/p2psync/getServer.php?key=q5mAKKZdn6ke9ghVa7YbE7uM"), ServerIP.class);	//So not just anyone can use it
 	}
 	
 	public void setServerIP(ServerIP server) {
 		Gson gson = new Gson();
-		httpGet("http://stuff.bmcq.co.uk/p2psync/setServer.php?key=q5mAKKZdn6ke9ghVa7YbE7uM&ip=" + gson.toJson(server));
+		httpGet("http://stuff.bmcq.co.uk/p2psync/setServer.php?key=q5mAKKZdn6ke9ghVa7YbE7uM&ip=" + gson.toJson(server));		//JSON object sent in URL because I'm damn lazy. I should POST it really.
 	}
 	
+		//Basic HTTP GET stuff with informative error messages(!)
 	private String httpGet(String address) {
 		HttpURLConnection httpCon;
 		URL url = null;

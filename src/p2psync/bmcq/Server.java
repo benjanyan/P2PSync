@@ -31,7 +31,7 @@ public class Server {
 	}
 	
 	public void listen() {
-		if (isConnected()) {
+		if (isConnected()) {			//Apparently, we may already be connected :S
 			close();
 		}
 		
@@ -65,7 +65,7 @@ public class Server {
 		}
 	}
 	
-	public void informMasterServer() {
+	public void informMasterServer() {			//Tell our external server our local IP. It will detect our external IP itself.
 		ServerDiscover serverDiscover = new ServerDiscover();
 		
 		try {
@@ -83,7 +83,7 @@ public class Server {
 		Utils.logD(description + " key set to: " + key);
 	}
 	
-	protected String readLine() {
+	protected String readLine() {		//Same as in our Client class. Not really needed if we're not using UDT
 		int characterBuffer = 512;
 		int[] lineArray = new int[characterBuffer];
 		int i = 0;
@@ -195,7 +195,7 @@ public class Server {
 		command_echo("request:" + thing);
 	}
 	
-	protected String getParam(String command, String regEx, int paramNo) {
+	protected String getParam(String command, String regEx, int paramNo) {		//Some regex stuff to decipher commands. Was more important in earlier versions.
 		Pattern pattern = Pattern.compile(regEx);
 		Matcher matcher = pattern.matcher(command);
 		

@@ -2,6 +2,11 @@ package p2psync.bmcq;
 
 import java.io.File;
 
+/*
+ * Does the actual actions based on flags from our FileInfo object.
+ * This includes deleting & creating new folders and fetching files.
+ */
+
 public class Sync {
 	private FileInfo syncInfo;
 	private Path rootDirectory;

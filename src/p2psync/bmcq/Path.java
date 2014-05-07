@@ -7,7 +7,8 @@ import java.util.Iterator;
 
 public class Path implements Serializable {
 	/**
-	 * 
+	 * An attempt to replicate some of Java 7's useful Path class.
+	 * As we may be dealing with different OSs and sending this over sockets, representation of paths needs to remain consistent.
 	 */
 	private static final long serialVersionUID = -3968651610332770221L;
 	private ArrayList<String> path = new ArrayList<String>();
@@ -16,8 +17,8 @@ public class Path implements Serializable {
 		this.path = new ArrayList<String>();
 		String separator;
 		
-		if (File.separator.equals("\\")) {
-			separator = "\\\\";
+		if (File.separator.equals("\\")) {	//It is an escape character.
+			separator = "\\\\";				//And it needs lots of escaping.
 		} else {
 			separator = File.separator;
 		}
@@ -47,7 +48,7 @@ public class Path implements Serializable {
 		return this.path.size();
 	}
 	
-	public String toString() {
+	public String toString() {			//Return our path as a string in the local OSs format
 		String pathString = "";
 		Iterator<String> pathIterator = path.iterator();
 		String member = null;
@@ -62,7 +63,7 @@ public class Path implements Serializable {
 		return pathString;
 	}
 	
-	public Path getPathRelativeTo(Path otherPath) {
+	public Path getPathRelativeTo(Path otherPath) {				//Our sync paths on the two devices are probably in different places so we need to know stuff relative to that rather than the full path.
 		ArrayList<String> newPath = new ArrayList<String>();
 		int i = 0;
 		

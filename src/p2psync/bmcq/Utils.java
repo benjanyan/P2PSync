@@ -10,6 +10,7 @@ public class Utils {
 		return System.getProperty("os.name").matches("Linux");
 	}
 	
+		//Comment out the Log.d blahblah for Android.
 	static void logD(String message) {
 		if (isAndroid()) {
 			//Log.d("P2PSync", message);

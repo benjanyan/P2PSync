@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Test {
-
+	//Some of the code used for testing in the report.
 	public static void main(String[] args)  {
 		ServerDiscover serverDiscover = new ServerDiscover();
 		ServerIP serverIp = null;

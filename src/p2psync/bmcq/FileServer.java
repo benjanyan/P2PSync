@@ -3,7 +3,6 @@ package p2psync.bmcq;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class FileServer extends Server {
 	
@@ -27,7 +26,7 @@ public class FileServer extends Server {
 		controlServer.command_request("file:" + fileInfo.getId());
 		Utils.logD("FileServer: Awaiting file...");
 		
-		if (!isConnected()) {
+		if (!isConnected()) {		//The socket may already be connected from a previous transfer
 			listen();
 		}
 				
@@ -41,9 +40,9 @@ public class FileServer extends Server {
 				received += read;
 			}
 			fileOutput.close();
-			localFile.setLastModified(fileInfo.getModifiedDate());
+			localFile.setLastModified(fileInfo.getModifiedDate());		//preserve the original's modified date! Otherwise things get confusing and it'll be flagged as new/modified on the next run.
 						
-			if (received != fileInfo.getLength()) {
+			if (received != fileInfo.getLength()) {					//A bit of debugging code.
 				Utils.logE("Received file size differs for " + fileInfo.getName() + " [" + received + "/" + fileInfo.getLength() + "]");
 			}
 			

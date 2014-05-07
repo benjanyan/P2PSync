@@ -2,6 +2,9 @@ package p2psync.bmcq;
 
 import java.io.File;
 
+/*
+ * Handles the protocol for the server side. One of the main parts of the software.
+ */
 
 public class ControlServer extends Server {
 	private FileServer fileServer;
@@ -13,16 +16,17 @@ public class ControlServer extends Server {
 		fileServer = new FileServer(port + 1, this, rootDirectory);
 	}
 	
+		//Our entry point, it kicks everything off calls control() to handle the communication with the client
 	public void run() {
-		listen();
-		this.rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
-		rootFileInfo.setFlags();
-		rootFileInfo.refreshHashMap();
+		listen();						//We can't progress from this point until the client has connected.
+		this.rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);		//Our directory to sync is traversed and changed to object form. It has no parent so we pass "null".
+		rootFileInfo.setFlags();		//Set the modified or deleted flags based on the previous run if it exists.
+		rootFileInfo.refreshHashMap();	//HashMap for looking up files quickly. Should be called everytime the rootFileInfo changes.
 		control();
 	}
 	
-	public void restart() {
-		this.rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
+	public void restart() {				//When the process is complete, we reset and wait for connections again via the run() method.
+		//this.rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null); Not sure why I have this again. It's rebuilt again in run() anyway.
 		fileServer = new FileServer(port + 1, this, rootDirectory);
 		try {
 			Thread.sleep(2000);
@@ -33,7 +37,7 @@ public class ControlServer extends Server {
 		run();
 	}
 	
-	public void exportFileInfo() {
+	public void exportFileInfo() {		//Write our FileInfo objects for comparison the next time we run rootFileInfo.setFlags()
 		rootFileInfo = new FileInfo(new File(rootDirectory.toString()),null);
 		rootFileInfo.export();
 	}
@@ -44,6 +48,7 @@ public class ControlServer extends Server {
 		String param;
 		String key;
 		
+			//Key request
 		while (state == 1) {
 			command_echo("request:key");
 			command = readLine();
@@ -56,7 +61,7 @@ public class ControlServer extends Server {
 		}
 		
 		FileInfo remoteFileInfo = null;
-		
+			//Main commands
 		while (state == 2) {
 			command_request("command");
 			command = readLine();

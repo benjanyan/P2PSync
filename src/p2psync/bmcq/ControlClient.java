@@ -1,7 +1,11 @@
 package p2psync.bmcq;
 
 import java.io.File;
-import java.net.InetAddress;
+
+/*
+ * The client side of the main protocol to execute the sync process.
+ * Involves code for
+ */
 
 public class ControlClient extends Client {
 	
@@ -57,7 +61,7 @@ public class ControlClient extends Client {
 		}
 	
 
-		
+			//Close process
 		while (state == 4) {
 			Utils.logD("Client: Starting shutdown... (awaiting server request for command)");
 			command = readLine();
@@ -69,7 +73,7 @@ public class ControlClient extends Client {
 			}
 		}
 		
-		close();
+		close();	//Call the superclass function to close the socket.
 
 	}
 }

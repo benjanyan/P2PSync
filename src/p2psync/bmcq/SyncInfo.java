@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class SyncInfo implements Serializable {
 	/**
-	 * 
+	 * Contains our flags. Only 3 are really used as of today; modified, deleted and analysed.
 	 */
 	private static final long serialVersionUID = 4130923471999661699L;
 	private boolean modified;

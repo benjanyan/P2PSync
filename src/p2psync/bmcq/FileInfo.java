@@ -15,17 +15,17 @@ public class FileInfo extends SyncInfo implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8865725152813983428L;
-	private String name;		//File's name
-	private Path path;		//The path relative to the root directory
+	private String name;							//File's name
+	private Path path;								//The path relative to the root directory
 	private Long modifiedDate;
-	private Long length;		//Size in bytes
-	private String id;
+	private Long length;							//Size in bytes
+	private String id;								//unique id (well, I hope so)
 	
 	private File file;
-	private FileInfo parent;	//(null for root)
+	private FileInfo parent;						//(null for root)
 	private FileInfo[] children;
-	private HashMap<String, FileInfo> completeHashMap;
-	private boolean directory;	//True if directory rather than a file
+	private HashMap<String, FileInfo> completeHashMap;	//Only set in our root FileInfo for looking up files in itself and children quickly
+	private boolean directory;						//True if directory rather than a file
 	
 	private String localRootPath;
 	
@@ -61,7 +61,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		directory = true;
 	}
 	
-	public void constructFromFile() {
+	public void constructFromFile() {						//Just for convenience, does as it says from a Java File object
 		name = file.getName();
 		if (parent == null) {
 			localRootPath = file.getPath();
@@ -72,17 +72,17 @@ public class FileInfo extends SyncInfo implements Serializable {
 		path = getPathRelativeToRoot();
 		this.length = (long) 0;
 		
-		if (file.isDirectory()) {
+		if (file.isDirectory()) {										//If it's a directory, we need to create it's child FileInfos too!
 			File[] childFiles = file.listFiles();
 			directory = true;
 			children = new FileInfo[childFiles.length];
 			for (int i = 0; i < childFiles.length; ++i) {
-				children[i] = new FileInfo(childFiles[i],this);
+				children[i] = new FileInfo(childFiles[i],this);			//This will kick off the process again until we have a complete structure
 			}
 		} else {
 			this.length = file.length();
 		}
-		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();
+		this.id = modifiedDate.toString() + name.length() + path.getNameCount() + length.toString();	//unique enough? I know, I know. :(
 	}
 	
 	
@@ -114,11 +114,11 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return modifiedDate >= otherFile.modifiedDate;
 	}
 	
-	public void associatedFile(File file) {
+	public void associatedFile(File file) {			
 		this.file = file;
 	}
-	
-	public void deassociatedFile(){
+
+	public void deassociatedFile(){				//I wasn't quite sure if the File object could also be serialized. It's not needed on the other side.
 		this.file = null;
 	}
 	
@@ -133,7 +133,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	public void export() {																			//Export serialized object for next sync
 		String path = ".lastRun.bmh";
 		try {
-			File file = new File(localRootPath + File.separator + path);
+			File file = new File(localRootPath + File.separator + path);						//File seperator used for file system. Either "/" or "\" most of the time.
 			ObjectOutputStream fileOutput = new ObjectOutputStream(new FileOutputStream(file));
 			forgetDeleted();
 			resetFlags();
@@ -170,7 +170,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return null;
 	}
 	
-	public void setFlags() {
+	public void setFlags() {							//Convenience method. Set Flags is mostly recursive.
 		FileInfo previous = getPreviousFileInfo();
 		setFlags(previous);
 	}
@@ -236,7 +236,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 
 	
 		//INTERNAL
-	protected FileInfo getRoot() {
+	protected FileInfo getRoot() {			//Recurses until it finds our root FileInfo
 		if (getParent() != null) {
 			return getParent().getRoot();
 		} else {
@@ -244,7 +244,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		}
 	}
 	
-	private Path getPathRelativeToRoot() {
+	private Path getPathRelativeToRoot() {	//Get the path relative to the root so we can figure out where it goes on the other side. The full path will be different 9 times out of 10.
 		if (parent != null && parent.getParent() != null) {
 			Path fullPath = new Path(file.getPath());
 			Path rootPath = new Path(getRoot().getLocalRootPath());
@@ -262,7 +262,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		return otherFileInfo.getModifiedDate() < modifiedDate;
 	}
 	
-	public void refreshHashMap() {
+	public void refreshHashMap() {			//Convenience again, it's recursive.
 		if (parent == null) {
 			//Utils.logD("Rebuilding HashMap...");
 			completeHashMap = new HashMap<String,FileInfo>();
@@ -285,7 +285,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 	
 	
 		//HELPER METHODS
-	public void printContents(String indent) {
+	public void printContents(String indent) {			//Mostly for debugging
 		if (this.isDirectory()) {
 			for(FileInfo child : children) {
 				if (child.isDirectory()) {
@@ -318,7 +318,7 @@ public class FileInfo extends SyncInfo implements Serializable {
 		printContents("");
 	}
 	
-	public void detectConflicts(FileInfo otherFileInfos) {
+	public void detectConflicts(FileInfo otherFileInfos) {			//This was intended to detect conflicts such as two existing files being modified both sides but it was never tested properly or debugged/
 		FileInfo matchedFileInfo = null;
 		HashMap<String,FileInfo> children = getChildrenAsHashMap();
 		for (FileInfo ofi : otherFileInfos.getChildren()) {

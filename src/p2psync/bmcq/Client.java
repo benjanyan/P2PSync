@@ -10,13 +10,16 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+ * Superclass for ControlClient and FileClient. Takes care of the socket business.
+*/
 public class Client {
 	protected ServerIP host;
 	protected int port;
 	protected Socket socket;
 	protected InputStream input;
 	protected OutputStream output;
-	protected String key;
+	protected String key;			//The ControlServer will request this on connecting
 	private boolean isConnected;
 
 	
@@ -62,6 +65,7 @@ public class Client {
 		}
 	}
 	
+		//This was written mainly for UDT which didn't include the function like normal sockets. Somewhat redundant right now.
 	protected String readLine() {
 		int characterBuffer = 512;
 		int[] lineArray = new int[characterBuffer];
